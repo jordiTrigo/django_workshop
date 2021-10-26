@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from .models import Post
+from django.utils import timezone
 
 #
 # Una View es un lugar donde ponemos la "lógica" de nuestra aplicación. Pedirá información 
@@ -12,4 +14,10 @@ from django.shortcuts import render
 
 
 def post_list(request):
-    return render(request, 'blog/post_list.html', {})
+    my_posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+
+    my_context = {
+        'posts': my_posts,
+    }
+
+    return render(request, 'blog/post_list.html', my_context)
